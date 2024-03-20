@@ -11,7 +11,8 @@ typedef struct {
     int points;
 } Snake;
 
-Tbody *CreateBody(Vector2 position) {
+Tbody *CreateBody(Vector2 position)
+{
     Tbody *body = (Tbody *)malloc(sizeof(Tbody));
     if (body != NULL) {
         body->pos = position;
@@ -20,7 +21,8 @@ Tbody *CreateBody(Vector2 position) {
     return body;
 }
 
-void AddBody(Snake *snake, Vector2 position) {
+void AddBody(Snake *snake, Vector2 position)
+{
     Tbody *newNode = CreateBody(position);
     if (newNode == NULL)
     {
@@ -36,11 +38,13 @@ void AddBody(Snake *snake, Vector2 position) {
     currentNode->next = newNode;
 }
 
-void FreeBody(Tbody *node) {
+void FreeBody(Tbody *node) 
+{
     free(node);
 }
 
-Snake *InitSnake(Vector2 position) {
+Snake *InitSnake(Vector2 position) 
+{
     Snake *snake = (Snake *)malloc(sizeof(Snake));
     if (snake != NULL) {
         snake->head = CreateBody(position);
