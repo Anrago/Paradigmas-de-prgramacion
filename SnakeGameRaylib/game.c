@@ -9,15 +9,52 @@
 
 // void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
 void DrawBody(int startX, int startY, Tbody *head);
-void DrawSnake(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
-void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed);
+void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
+void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed, bool *CloseGame);
 int Detected(int KeyPresed);
+
+void Game();
 
 int main(void)
 {
+    InitWindow(1920, 1080, "Snake");
+    Vector2 Mouse;
+    Rectangle Start = {960, 540, 250, 140};
+    Rectangle Close = {450, 889, 100, 100};
+    bool MouseStartGame = 0;
+    bool MouseCloseGame = 0;
+    bool CloseGame = 0;
+    while (!WindowShouldClose() && !CloseGame)
+    {
+        BeginDrawing();
+        Mouse = GetMousePosition();
+
+        DrawRectangleRec(Start, BLUE);
+        DrawRectangleRec(Close, RED);
+        MouseStartGame = CheckCollisionPointRec(Mouse, Start);
+        MouseCloseGame = CheckCollisionPointRec(Mouse, Close);
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            if (MouseStartGame)
+                Game();
+
+            if (MouseCloseGame)
+                CloseGame = 1;
+        }
+
+        EndDrawing();
+    }
+
+    return 0;
+}
+
+//------------------------Funciones------------------------------
+
+void Game()
+{
     int screenWidth = 1920;
     int screenHeight = 1080;
-    InitWindow(screenWidth, screenHeight, "Snake");
     Vector2 Apple = {GetRandomValue(1, MAX_COLUMNS - 1), GetRandomValue(1, MAX_ROWS - 1)};
 
     Snake *snake = InitSnake((Vector2){11, 9});
@@ -27,6 +64,7 @@ int main(void)
     int Matrix[MAX_ROWS][MAX_COLUMNS];
     int detctKeyboar = 0;
     int temp;
+    bool CloseGame = false;
     SetTargetFPS(60);
 
     for (int i = 0; i < MAX_ROWS; i++)
@@ -39,18 +77,16 @@ int main(void)
 
     Matrix[(int)Apple.y][(int)Apple.x] = 2;
     Matrix[(int)snake->head->pos.y][(int)snake->head->pos.x] = 1;
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !CloseGame)
     {
-        Tbody *currentNode = snake->head;
-
-        // float elapsedTime = GetFrameTime();
+        Tbody *currentNode = snake->head->next;
 
         BeginDrawing();
         DrawText("SNAKE", (screenWidth / 2) - 100, 30, 50, BLUE);
 
         DrawText(TextFormat("Points: %i", snake->points), 100, 40, 30, BLUE);
 
-        DrawSnake(startX, startY, Matrix);
+        DrawMatrix(startX, startY, Matrix);
 
         if (CheckCollisionRecs((Rectangle){snake->head->pos.x * (CELL_SIZE + PADDING) + startX, snake->head->pos.y * (CELL_SIZE + PADDING) + startY, CELL_SIZE, CELL_SIZE}, (Rectangle){Apple.x * (CELL_SIZE + PADDING) + startX, Apple.y * (CELL_SIZE + PADDING) + startY, CELL_SIZE, CELL_SIZE}))
         {
@@ -67,18 +103,8 @@ int main(void)
             snake->points++;
         }
 
-        if (snake->head->pos.x == 0 || snake->head->pos.x == MAX_COLUMNS-1|| snake->head->pos.y == 0 || snake->head->pos.y == MAX_ROWS-1)
-            CloseWindow();
-        
-        while(currentNode->next!=NULL)
-        {
-            if (CheckCollisionRecs((Rectangle){snake->head->pos.x * (CELL_SIZE + PADDING) + startX, snake->head->pos.y * (CELL_SIZE + PADDING) + startY, CELL_SIZE, CELL_SIZE}, (Rectangle){currentNode->next->pos.x * (CELL_SIZE + PADDING) + startX-40, currentNode->next->pos.y * (CELL_SIZE + PADDING) + startY+40, CELL_SIZE, CELL_SIZE}))
-            {
-                CloseWindow();
-            }
-            currentNode = currentNode->next;
-        }
-
+        if (snake->head->pos.x == -1 || snake->head->pos.x == MAX_COLUMNS || snake->head->pos.y == -1 || snake->head->pos.y == MAX_ROWS)
+            CloseGame = true;
 
         DrawBody(startX, startY, snake->head);
 
@@ -87,9 +113,9 @@ int main(void)
         if (keyPresed != 0)
         {
             detctKeyboar = Detected(keyPresed);
-            MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar);
+            MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar, &CloseGame);
         }
-        MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar);
+        MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar, &CloseGame);
 
         ClearBackground(BLACK);
 
@@ -98,10 +124,9 @@ int main(void)
 
     CloseWindow();
     FreeSnake(snake);
-    return 0;
 }
 
-void DrawSnake(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
+void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
 {
     for (int i = 0; i < MAX_ROWS; i++)
     {
@@ -111,65 +136,90 @@ void DrawSnake(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
             int cellY = posy + i * (CELL_SIZE + PADDING);
             Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
             if (Matrix[i][j] == 0)
-                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, WHITE);
-            if (Matrix[i][j] == 1)
-                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, GREEN);
+                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, SKYBLUE);
             if (Matrix[i][j] == 2)
-                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, RED);
+                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, ORANGE);
         }
     }
 }
 
 void DrawBody(int startX, int startY, Tbody *head)
 {
+    int iter = 0;
     Tbody *currentNode = head;
     while (currentNode != NULL)
     {
         int cellX = startX + currentNode->pos.x * (CELL_SIZE + PADDING);
         int cellY = startY + currentNode->pos.y * (CELL_SIZE + PADDING);
         Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
-        DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, GREEN);
+        if (iter == 0)
 
-        currentNode = currentNode->next; // Avanzamos al siguiente nodo
+        {
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
+            iter = 1;
+        }
+        if (iter % 2 == 0 && iter != 0)
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, WHITE);
+        if (iter % 2 != 0 && iter != 1)
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKGRAY);
+        iter++;
+
+        currentNode = currentNode->next;
     }
 }
 
-void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed)
+void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed, bool *CloseGame)
 {
     int tempX = pos->x;
     int tempY = pos->y;
     int nextX = tempX;
     int nextY = tempY;
-    static int lastKeyPressed = 0;
+    static int currentDirection = 4;
     static float timer = 0;
     timer += GetFrameTime();
     if (timer < MOVE_SPEED * 0.2f)
         return;
+    if (keyPressed == 4 && currentDirection != 3)
+        currentDirection = 4; // Derecha
+    else if (keyPressed == 3 && currentDirection != 4)
+        currentDirection = 3; // Izquierda
+    else if (keyPressed == 2 && currentDirection != 1)
+        currentDirection = 2; // Arriba
+    else if (keyPressed == 1 && currentDirection != 2)
+        currentDirection = 1; // Abajo
 
-    if (keyPressed == 4 && lastKeyPressed != 3)
+    // Mover la serpiente según la dirección actual
+    if (currentDirection == 4)
     {
         nextX++;
-        lastKeyPressed = 4;
     }
-    if (keyPressed == 3 && lastKeyPressed != 4)
+    else if (currentDirection == 3)
     {
         nextX--;
-        lastKeyPressed = 3;
     }
-    if (keyPressed == 2 && lastKeyPressed != 1)
+    else if (currentDirection == 2)
     {
         nextY--;
-        lastKeyPressed = 2;
     }
-    if (keyPressed == 1 && lastKeyPressed != 2)
+    else if (currentDirection == 1)
     {
         nextY++;
-        lastKeyPressed = 1;
     }
 
-    if (nextX >= 0 && nextX < MAX_COLUMNS && nextY >= 0 && nextY < MAX_ROWS)
+    Tbody *CollisionNode = head->next;
+    while (CollisionNode != NULL)
     {
+        if (nextX == CollisionNode->pos.x && nextY == CollisionNode->pos.y)
+        {
+            *CloseGame = true; // Colisión detectada, finalizar el juego
+            return;
+        }
+        CollisionNode = CollisionNode->next;
+    }
 
+    if (nextX >= -1 && nextX < MAX_COLUMNS + 1 && nextY >= -1 && nextY < MAX_ROWS + 1)
+    {
+        Matrix[nextY][nextX] = 1;
         pos->x = nextX;
         pos->y = nextY;
     }
