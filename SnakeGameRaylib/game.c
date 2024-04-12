@@ -6,27 +6,33 @@
 #define CELL_SIZE 40
 #define PADDING 5
 #define MOVE_SPEED 0.5f
+#define WIDTH 1920
+#define HEIGHT 1080
 
 // void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
 void DrawBody(int startX, int startY, Tbody *head);
 void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
 void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed, bool *CloseGame);
 int Detected(int KeyPresed);
-
+void GameOver(int points);
 void Game();
 
 int main(void)
 {
-    InitWindow(1920, 1080, "Snake");
     Vector2 Mouse;
     Rectangle Start = {960, 540, 250, 140};
     Rectangle Close = {450, 889, 100, 100};
+    int Points=0;
     bool MouseStartGame = 0;
     bool MouseCloseGame = 0;
-    bool CloseGame = 0;
-    while (!WindowShouldClose() && !CloseGame)
+    bool CloseGame = false;
+
+    SetTargetFPS(60);
+    InitWindow(WIDTH, HEIGHT, "Snake");
+    while (!CloseGame)
     {
         BeginDrawing();
+        ClearBackground(BLACK);
         Mouse = GetMousePosition();
 
         DrawRectangleRec(Start, BLUE);
@@ -42,7 +48,6 @@ int main(void)
             if (MouseCloseGame)
                 CloseGame = 1;
         }
-
         EndDrawing();
     }
 
@@ -53,19 +58,14 @@ int main(void)
 
 void Game()
 {
-    int screenWidth = 1920;
-    int screenHeight = 1080;
     Vector2 Apple = {GetRandomValue(1, MAX_COLUMNS - 1), GetRandomValue(1, MAX_ROWS - 1)};
-
     Snake *snake = InitSnake((Vector2){11, 9});
-
     int startX = 40;
     int startY = 80;
     int Matrix[MAX_ROWS][MAX_COLUMNS];
-    int detctKeyboar = 0;
+    int detctKeyboar = 4;
     int temp;
     bool CloseGame = false;
-    SetTargetFPS(60);
 
     for (int i = 0; i < MAX_ROWS; i++)
     {
@@ -77,12 +77,10 @@ void Game()
 
     Matrix[(int)Apple.y][(int)Apple.x] = 2;
     Matrix[(int)snake->head->pos.y][(int)snake->head->pos.x] = 1;
-    while (!WindowShouldClose() && !CloseGame)
+    while (!CloseGame)
     {
-        Tbody *currentNode = snake->head->next;
-
         BeginDrawing();
-        DrawText("SNAKE", (screenWidth / 2) - 100, 30, 50, BLUE);
+        DrawText("SNAKE", (WIDTH / 2) - 100, 30, 50, BLUE);
 
         DrawText(TextFormat("Points: %i", snake->points), 100, 40, 30, BLUE);
 
@@ -118,11 +116,10 @@ void Game()
         MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar, &CloseGame);
 
         ClearBackground(BLACK);
-
         EndDrawing();
     }
 
-    CloseWindow();
+    GameOver(snake->points);
     FreeSnake(snake);
 }
 
@@ -155,13 +152,13 @@ void DrawBody(int startX, int startY, Tbody *head)
         if (iter == 0)
 
         {
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, YELLOW);
             iter = 1;
         }
         if (iter % 2 == 0 && iter != 0)
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, WHITE);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, RED);
         if (iter % 2 != 0 && iter != 1)
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKGRAY);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
         iter++;
 
         currentNode = currentNode->next;
@@ -211,13 +208,13 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
     {
         if (nextX == CollisionNode->pos.x && nextY == CollisionNode->pos.y)
         {
-            *CloseGame = true; // Colisión detectada, finalizar el juego
+            *CloseGame = true;
             return;
         }
         CollisionNode = CollisionNode->next;
     }
 
-    if (nextX >= -1 && nextX < MAX_COLUMNS + 1 && nextY >= -1 && nextY < MAX_ROWS + 1)
+    if (nextX >= 0 && nextX < MAX_COLUMNS + 1 && nextY >= 0 && nextY < MAX_ROWS + 1)
     {
         Matrix[nextY][nextX] = 1;
         pos->x = nextX;
@@ -247,6 +244,7 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
                 Matrix[i][j] = 0;
         }
     }
+
 }
 
 int Detected(int KeyPresed)
@@ -259,4 +257,34 @@ int Detected(int KeyPresed)
         return 2;
     if (KeyPresed == KEY_S)
         return 1;
+}
+
+void GameOver(int points)
+{
+    static int Record = 0;
+    Rectangle BackToMenu={200,200,100,100};
+    Vector2 MousePosition;
+    bool MouseBackToMenu = false;
+    bool CloseGame=false;
+
+    if (points > Record)
+        Record = points;
+
+    while (!WindowShouldClose() && !CloseGame)
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText(TextFormat("Points: %i", points), 100, 40, 30, BLUE);
+        DrawText(TextFormat("Record: %i", Record), 300, 40, 30, BLUE);
+        MousePosition = GetMousePosition();
+        DrawRectangleRec(BackToMenu, GREEN);
+        MouseBackToMenu = CheckCollisionPointRec(MousePosition, BackToMenu);
+
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            if (MouseBackToMenu)
+                CloseGame=true;
+        }
+        EndDrawing();
+    }
 }
