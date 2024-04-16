@@ -150,7 +150,6 @@ void DrawBody(int startX, int startY, Tbody *head)
         int cellY = startY + currentNode->pos.y * (CELL_SIZE + PADDING);
         Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
         if (iter == 0)
-
         {
             DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, YELLOW);
             iter = 1;
@@ -214,7 +213,7 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
         CollisionNode = CollisionNode->next;
     }
 
-    if (nextX >= 0 && nextX < MAX_COLUMNS + 1 && nextY >= 0 && nextY < MAX_ROWS + 1)
+    if (nextX >= -1 && nextX < MAX_COLUMNS + 1 && nextY >= -1 && nextY < MAX_ROWS + 1)
     {
         Matrix[nextY][nextX] = 1;
         pos->x = nextX;
