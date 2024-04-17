@@ -1,4 +1,6 @@
 # COMANDOS GIT
+**Alumno: Antonio Ramos Gonzalez**
+**Materia: Paradigmas de la programacion**
 
 Durante esta practica de laboratorio se desarrollaron conocimientos sobre el empleo de comandos Git desde el uso de una terminal de comandos.
 
@@ -71,3 +73,16 @@ Durante esta practica de laboratorio se desarrollaron conocimientos sobre el emp
 git checkout -b <NombreNuevaRama>
 ```
 
+##### Una vez creada la nueva rama en nuestro repositorio local ingresamos a ella y abrimos el archivo .md que creamos en la rama principal, lo modificamos y añadimos a la nueva rama
+
+```bash
+git add .
+git commit -m "Nueva Rama"
+```
+##### Y para terminar damos push a los cambios realizados desde nuestra rama
+
+```bash
+git push -u origin <NombreNuevaRama>
+```
+##### Si ingresamos a nuestro repositorio en GitHub podermos visualizar la nueva rama creada
+![](Imagenes/Imagen11.png)
