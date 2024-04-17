@@ -1,5 +1,5 @@
 # COMANDOS GIT
-**Alumno: Antonio Ramos Gonzalez**
+**Alumno: Antonio Ramos Gonzalez**<br>
 **Materia: Paradigmas de la programacion**
 
 Durante esta practica de laboratorio se desarrollaron conocimientos sobre el empleo de comandos Git desde el uso de una terminal de comandos.
