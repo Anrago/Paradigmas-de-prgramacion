@@ -1,7 +1,7 @@
 class Account:
-    def __init__(self,noAccount,noCard):
-        self.noAcount=noAccount
-        self.noCard=noCard
+    def __init__(self):
+        self.interBanKey=''
+        self.noCard=''
         self.balance=0
 
     def WithdrawCash(self):
@@ -20,12 +20,12 @@ class Account:
         self.balance+=amount
 
     def CheckBalance(self):
-        print("No.Cuenta: ",self.noAcount)
+        print("No.Cuenta: ",self.interBanKey)
         print("No.Tarjeta: ",self.noCard)
         print("Saldo en cuenta: ",self.balance)
 
     
-cuenta=Account("12345","54321",5000)
+
 
 
 
