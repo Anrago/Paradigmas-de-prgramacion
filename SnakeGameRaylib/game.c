@@ -22,17 +22,22 @@ int main(void)
     Vector2 Mouse;
     Rectangle Start = {960, 540, 250, 140};
     Rectangle Close = {450, 889, 100, 100};
-    int Points=0;
+    Image imageT = LoadImage("Menu.jpeg");
+    Texture2D Menu = LoadTextureFromImage(imageT);
+    int Points = 0;
     bool MouseStartGame = 0;
     bool MouseCloseGame = 0;
     bool CloseGame = false;
 
+    UnloadImage(imageT);
     SetTargetFPS(60);
     InitWindow(WIDTH, HEIGHT, "Snake");
+
     while (!CloseGame)
     {
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(RAYWHITE);
+        DrawTexture(Menu, 0, 0, WHITE);
         Mouse = GetMousePosition();
 
         DrawRectangleRec(Start, BLUE);
@@ -51,9 +56,10 @@ int main(void)
         EndDrawing();
     }
 
+    UnloadTexture(Menu);
+    CloseWindow();
     return 0;
 }
-
 //------------------------Funciones------------------------------
 
 void Game()
@@ -243,7 +249,6 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
                 Matrix[i][j] = 0;
         }
     }
-
 }
 
 int Detected(int KeyPresed)
@@ -261,10 +266,10 @@ int Detected(int KeyPresed)
 void GameOver(int points)
 {
     static int Record = 0;
-    Rectangle BackToMenu={200,200,100,100};
+    Rectangle BackToMenu = {200, 200, 100, 100};
     Vector2 MousePosition;
     bool MouseBackToMenu = false;
-    bool CloseGame=false;
+    bool CloseGame = false;
 
     if (points > Record)
         Record = points;
@@ -282,7 +287,7 @@ void GameOver(int points)
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             if (MouseBackToMenu)
-                CloseGame=true;
+                CloseGame = true;
         }
         EndDrawing();
     }
