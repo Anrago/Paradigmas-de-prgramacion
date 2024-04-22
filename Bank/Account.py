@@ -4,20 +4,38 @@ class Account:
         self.noCard=''
         self.balance=0
 
-    def WithdrawCash(self):
-        amount=float(input("Ingrese cantidad a retirar: "))
-        while(True):
-            if self.balance>0 and self.balance>amount:
-                self.balance-=amount
+    def WithdrawCash(self,amount):
+            if float(self.balance)>0 and float(self.balance)>=float(amount):
+                lines=[]
+                with open("Bank/Cuentas.txt", "r") as fa:
+                        for line in fa:
+                            part=line.split()
+                            if part[3] == self.noCard:
+                                self.balance=float(part[5])-amount
+                                part[5] = str(self.balance)
+                            newLine=' '. join(part) + '\n'
+                            lines.append(newLine)
+                with open("Bank/Cuentas.txt","w") as fa:
+                    fa.writelines(lines)
                 print("El retiro se ha realizado con exito")
-                break
             else:
-                amount=float(input("Saldo insuficiente. Favor de ingresar otra cantidad: "))
+                print("Saldo insuficiente. Favor de ingresar otra cantidad")
 
                 
-    def DepositCash(self):
-        amount = float(input("Ingrese cantidad a depositar: "))
-        self.balance+=amount
+    def DepositCash(self,amount):
+        lines=[]
+        with open("Bank/Cuentas.txt", "r") as fa:
+                for line in fa:
+                    part=line.split()
+                    if part[3] == self.noCard:
+                        self.balance=int(part[5])+amount
+                        part[5] = str(self.balance)
+                    newLine=' '. join(part) + '\n'
+                    lines.append(newLine)
+        with open("Bank/Cuentas.txt","w") as fa:
+            fa.writelines(lines)
+            
+
 
     def CheckBalance(self):
         print("No.Cuenta: ",self.interBanKey)
