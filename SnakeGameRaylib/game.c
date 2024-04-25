@@ -13,6 +13,7 @@
 void DrawBody(int startX, int startY, Tbody *head);
 void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);
 void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed, bool *CloseGame);
+void BackRec();
 int Detected(int KeyPresed);
 void GameOver(int points);
 void Game();
@@ -20,31 +21,43 @@ void Game();
 int main(void)
 {
     Vector2 Mouse;
-    Rectangle Start = {960, 540, 250, 140};
-    Rectangle Close = {450, 889, 100, 100};
-    Image imageT = LoadImage("Menu.jpeg");
-    Texture2D Menu = LoadTextureFromImage(imageT);
+    Rectangle Start = {685, 454, 558, 155};
+    Rectangle Close = {685, 687, 558, 155};
+    Color DARKRED = {139, 0, 0, 255};
+    Color font = {50, 60, 57, 255};
     int Points = 0;
     bool MouseStartGame = 0;
     bool MouseCloseGame = 0;
     bool CloseGame = false;
 
-    UnloadImage(imageT);
     SetTargetFPS(60);
     InitWindow(WIDTH, HEIGHT, "Snake");
 
-    while (!CloseGame)
+    while (!CloseGame && !WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        DrawTexture(Menu, 0, 0, WHITE);
+        ClearBackground(LIME);
         Mouse = GetMousePosition();
-
+        BackRec();
+        DrawText("SNAKE", (WIDTH / 2) - 325, 150, 200, font );
         DrawRectangleRec(Start, BLUE);
         DrawRectangleRec(Close, RED);
+    
         MouseStartGame = CheckCollisionPointRec(Mouse, Start);
         MouseCloseGame = CheckCollisionPointRec(Mouse, Close);
 
+        if (MouseStartGame)
+        {
+            DrawRectangleLines(Start.x, Start.y, Start.width, Start.height, BLACK);
+            DrawRectangleRec(Start, DARKBLUE);
+        }
+        if (MouseCloseGame)
+        {
+            DrawRectangleLines(Close.x, Close.y, Close.width, Close.height, BLACK);
+            DrawRectangleRec(Close, DARKRED);
+        }
+        DrawText("Start", Start.x + 125, Start.y + 30, 100, font);
+        DrawText("Close", Close.x + 125, Close.y + 30, 100, font);
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
             if (MouseStartGame)
@@ -56,11 +69,17 @@ int main(void)
         EndDrawing();
     }
 
-    UnloadTexture(Menu);
     CloseWindow();
     return 0;
 }
 //------------------------Funciones------------------------------
+void BackRec()
+{
+    DrawRectangleRec((Rectangle){0,0,150,HEIGHT}, DARKGREEN);
+    DrawRectangleRec((Rectangle){1920-150,0,150,HEIGHT}, DARKGREEN);
+    DrawRectangleRec((Rectangle){0,0,WIDTH,70}, DARKGREEN);
+    DrawRectangleRec((Rectangle){0,1080-120,WIDTH,70}, DARKGREEN);    
+}
 
 void Game()
 {
@@ -83,7 +102,7 @@ void Game()
 
     Matrix[(int)Apple.y][(int)Apple.x] = 2;
     Matrix[(int)snake->head->pos.y][(int)snake->head->pos.x] = 1;
-    while (!CloseGame)
+    while (!CloseGame && !WindowShouldClose())
     {
         BeginDrawing();
         DrawText("SNAKE", (WIDTH / 2) - 100, 30, 50, BLUE);
@@ -131,6 +150,7 @@ void Game()
 
 void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
 {
+    Color DARKRED = {192, 0, 0, 255};
     for (int i = 0; i < MAX_ROWS; i++)
     {
         for (int j = 0; j < MAX_COLUMNS; j++)
@@ -139,9 +159,9 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
             int cellY = posy + i * (CELL_SIZE + PADDING);
             Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
             if (Matrix[i][j] == 0)
-                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, SKYBLUE);
+                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKGREEN);
             if (Matrix[i][j] == 2)
-                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, ORANGE);
+                DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKRED);
         }
     }
 }
@@ -149,6 +169,7 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
 void DrawBody(int startX, int startY, Tbody *head)
 {
     int iter = 0;
+    Color body = {100, 156, 0, 255};
     Tbody *currentNode = head;
     while (currentNode != NULL)
     {
@@ -157,14 +178,11 @@ void DrawBody(int startX, int startY, Tbody *head)
         Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
         if (iter == 0)
         {
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, YELLOW);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
             iter = 1;
         }
-        if (iter % 2 == 0 && iter != 0)
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, RED);
-        if (iter % 2 != 0 && iter != 1)
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
-        iter++;
+        else
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, body);
 
         currentNode = currentNode->next;
     }
@@ -251,6 +269,7 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
     }
 }
 
+
 int Detected(int KeyPresed)
 {
     if (KeyPresed == KEY_D)
@@ -266,8 +285,10 @@ int Detected(int KeyPresed)
 void GameOver(int points)
 {
     static int Record = 0;
-    Rectangle BackToMenu = {200, 200, 100, 100};
+    Rectangle BackToMenu = {685, 502, 558, 235};
     Vector2 MousePosition;
+    Color font = {50, 60, 57, 255};
+    Color purp = {105, 0, 105, 255};
     bool MouseBackToMenu = false;
     bool CloseGame = false;
 
@@ -277,12 +298,25 @@ void GameOver(int points)
     while (!WindowShouldClose() && !CloseGame)
     {
         BeginDrawing();
-        ClearBackground(BLACK);
-        DrawText(TextFormat("Points: %i", points), 100, 40, 30, BLUE);
-        DrawText(TextFormat("Record: %i", Record), 300, 40, 30, BLUE);
+        ClearBackground(LIME);
+        BackRec();
+        DrawText(TextFormat("Points: %i", points), 750, 250, 100, font);
+        DrawText(TextFormat("Record: %i", Record), 720, 350, 100, font);
+
+        DrawRectangleRec(BackToMenu, DARKPURPLE);
+
         MousePosition = GetMousePosition();
-        DrawRectangleRec(BackToMenu, GREEN);
         MouseBackToMenu = CheckCollisionPointRec(MousePosition, BackToMenu);
+
+        if (MouseBackToMenu)
+        {
+            DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width, BackToMenu.height, BLACK);
+            DrawRectangleRec(BackToMenu, purp );
+        }
+        DrawText("Game Over", 575, 75, 150, font);
+
+        DrawText("Back to", BackToMenu.x + 75, BackToMenu.y + 30, 100, font);
+        DrawText("Menu", BackToMenu.x + 150, BackToMenu.y + 130, 100, font);
 
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
