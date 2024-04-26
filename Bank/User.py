@@ -5,8 +5,8 @@ from random import randint
 class User(Person):
     def __init__(self):
         super().__init__('','','')
-        self.password=''
-        self.noClient=0
+        self.__password=''
+        self.__noClient=0
         self.account=Account()
 
     def register(self,name,age,password,valPass,gender): 
@@ -16,7 +16,7 @@ class User(Person):
             print("Lo sentimos, para crear una cuenta se debe de contar con una edad minima de 18 años:")
             return
         self.gender=gender
-        self.password=password
+        self.__password=password
         while(True):
             if self.password!=valPass:
                 print("Las contraseñas no coincide. Favor de intentarlo nuevamente")
@@ -24,17 +24,17 @@ class User(Person):
                 break
         print("La cuenta ha sido creada con exito")
         print("Bienvenido al la familia de LOS NACOS.")
-        self.account.noCard=randint(1000000000000000,9999999999999999)
-        self.account.interBanKey='542965'+str(randint(10000000000,99999999999))+str(randint(0,5))
-        self.noClient=randint(10000,99999)
-        print("Su numero de cliente es: ",self.noClient)
-        print("Su No. de tarjeta es: ",self.account.noCard) 
-        print("Su clave interbacaria es: ",self.account.interBanKey)
-        print("Su saldo inicial sera de : ",self.account.balance," $")
+        self.account._noCard=randint(1000000000000000,9999999999999999)
+        self.account._interBanKey='542965'+str(randint(10000000000,99999999999))+str(randint(0,5))
+        self.__noClient=randint(10000,99999)
+        print("Su numero de cliente es: ",self.__noClient)
+        print("Su No. de tarjeta es: ",self.account._noCard) 
+        print("Su clave interbacaria es: ",self.account._interBanKey)
+        print("Su saldo inicial sera de : ",self.account._balance," $")
         print("Con cualquiera de estos dos numero podra realizar transferencias")
         fa=open("Bank/Cuentas.txt","a")
         
-        fa.write(str(self.noClient) + ' ' + self.name + ' ' + self.password + ' ' + str(self.account.noCard) + ' ' + str(self.account.interBanKey) + ' ' + str(self.account.balance) + '\n')
+        fa.write(str(self.__noClient) + ' ' + self.name + ' ' + self.__password + ' ' + str(self.account._noCard) + ' ' + str(self.account._interBanKey) + ' ' + str(self.account._balance) + '\n')
         fa.close()
 
     def Login(self,noCard, password):
@@ -43,12 +43,11 @@ class User(Person):
             part=line.split()
             if part[2] == password and part[3]==noCard:
                 print("Login Realizado con exito")
-                self.account.balance=part[5]
-                self.account.interBanKey=part[4]
-                self.account.noCard=part[3]
+                self.account._balance=part[5]
+                self.account._interBanKey=part[4]
+                self.account._noCard=part[3]
                 fa.close()
                 return True
-        print("Te falla pa")
         fa.close()
         return False
     

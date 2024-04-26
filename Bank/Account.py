@@ -1,18 +1,18 @@
 class Account:
     def __init__(self):
-        self.interBanKey=''
-        self.noCard=''
-        self.balance=0
+        self._interBanKey=''
+        self._noCard=''
+        self._balance=0
 
     def WithdrawCash(self,amount):
-            if float(self.balance)>0 and float(self.balance)>=float(amount):
+            if float(self._balance)>0 and float(self._balance)>=float(amount):
                 lines=[]
                 with open("Bank/Cuentas.txt", "r") as fa:
                         for line in fa:
                             part=line.split()
-                            if part[3] == self.noCard:
-                                self.balance=float(part[5])-amount
-                                part[5] = str(self.balance)
+                            if part[3] == self._noCard:
+                                self._balance=float(part[5])-amount
+                                part[5] = str(self._balance)
                             newLine=' '. join(part) + '\n'
                             lines.append(newLine)
                 with open("Bank/Cuentas.txt","w") as fa:
@@ -27,20 +27,36 @@ class Account:
         with open("Bank/Cuentas.txt", "r") as fa:
                 for line in fa:
                     part=line.split()
-                    if part[3] == self.noCard:
-                        self.balance=int(part[5])+amount
-                        part[5] = str(self.balance)
+                    if part[3] == self._noCard:
+                        self._balance=float(part[5])+amount
+                        part[5] = str(self._balance)
                     newLine=' '. join(part) + '\n'
                     lines.append(newLine)
         with open("Bank/Cuentas.txt","w") as fa:
             fa.writelines(lines)
             
+    def Transaction(self,amount,InterBanKey):
+        lines=[]
+        with open("Bank/Cuentas.txt", "r") as fa:
+                for line in fa:
+                    part=line.split()
+                    if part[3] == self._noCard:
+                        self._balance=float(part[5])-amount
+                        part[5] = str(self._balance)
 
+                    if part[4] == InterBanKey:
+                        tempB = float(part[5])+amount
+                        part[5] = str(tempB)
+
+                    newLine=' '. join(part) + '\n'
+                    lines.append(newLine)
+        with open("Bank/Cuentas.txt","w") as fa:
+            fa.writelines(lines)
 
     def CheckBalance(self):
-        print("No.Cuenta: ",self.interBanKey)
-        print("No.Tarjeta: ",self.noCard)
-        print("Saldo en cuenta: ",self.balance)
+        print("No.Cuenta: ",self._interBanKey)
+        print("No.Tarjeta: ",self._noCard)
+        print("Saldo en cuenta: ",self._balance)
 
     
 

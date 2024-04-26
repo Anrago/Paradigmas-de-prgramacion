@@ -1,6 +1,17 @@
 from User import User
+import os
+import platform
+system=platform.system()
+def clear():
+    if system == "Linux":
+        os.system("clear")
+    if system == "Windows":
+        os.system("cls")
+def pause():
+    input("Oprime cualquier tecla para continuar")
 
-def menu(opc):
+def menuGeneral(opc):
+    clear()
     if opc==1:
         print("registro banco LOS NACOS")
         name=input("Nombre: ")
@@ -11,18 +22,30 @@ def menu(opc):
         client=User()
         client.register(name,age,password,valPass,gender)
     elif opc==2:
-        print("Login")
-        noCard=input("Ingrese numero de tarjeta: ")
-        password=input("Ingrese contrasenia: ")
-        client=User()
-        client.Login(noCard,password)
-        print("\n\n\n\n\n\n\n\n")
+        while(True):
+            print("Login")
+            noCard=input("Ingrese numero de tarjeta: ")
+            password=input("Ingrese contrasenia: ")
+            client=User()
+            val=client.Login(noCard,password)
+
+            if(val):
+                menuLogin(client)
+                return
+            else:
+                print("Los datos no coinciden. Favor de intentarlo nuevamente")
+
+        
+def menuLogin(client):
+    while(True):
+        clear()
         print("1.-Depositar")
         print("2.-Retirar")
         print("3.-Transferir")
         print("4.-Mostrar informacion cuenta")
+        print("5.-Cerrar Sesion")
         opc2=int(input("Elija una opcion: "))
-        print("\n\n\n\n\n\n\n\n")
+        clear()
         if opc2 == 1:
             amount=float(input("Ingrese cantidad a depositar: "))
             client.account.DepositCash(amount)
@@ -30,20 +53,27 @@ def menu(opc):
             amount=float(input("Ingrese cantidad a retirar: "))
             client.account.WithdrawCash(amount)
         elif opc2 ==3:
-            trans=2
+            amount=float(input("Ingrese cantidad a transferir: "))
+            InterBanKey=input("Ingrese clave interbancaria: ")
+            client.account.Transaction(amount,InterBanKey)
         elif opc2 ==4:
             client.account.CheckBalance()
-
+            pause()
+        elif opc2 ==5:
+            print("Hasta luego ",client.name)
+            return
 
         
 
 
 
 
-
-
+clear()
 print("1.-Registrarse")
 print("2.-login")
 opc=int(input("Elija una opcion: "))
-menu(opc)
+menuGeneral(opc)
+
+
+
 
