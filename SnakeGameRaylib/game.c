@@ -39,10 +39,10 @@ int main(void)
         ClearBackground(LIME);
         Mouse = GetMousePosition();
         BackRec();
-        DrawText("SNAKE", (WIDTH / 2) - 325, 150, 200, font );
+        DrawText("SNAKE", (WIDTH / 2) - 325, 150, 200, font);
         DrawRectangleRec(Start, BLUE);
         DrawRectangleRec(Close, RED);
-    
+
         MouseStartGame = CheckCollisionPointRec(Mouse, Start);
         MouseCloseGame = CheckCollisionPointRec(Mouse, Close);
 
@@ -66,6 +66,8 @@ int main(void)
             if (MouseCloseGame)
                 CloseGame = 1;
         }
+        DrawText("Create by: Antonio Ramos Gonzalez", 1410, 960, 20, GREEN);
+
         EndDrawing();
     }
 
@@ -75,10 +77,10 @@ int main(void)
 //------------------------Funciones------------------------------
 void BackRec()
 {
-    DrawRectangleRec((Rectangle){0,0,150,HEIGHT}, DARKGREEN);
-    DrawRectangleRec((Rectangle){1920-150,0,150,HEIGHT}, DARKGREEN);
-    DrawRectangleRec((Rectangle){0,0,WIDTH,70}, DARKGREEN);
-    DrawRectangleRec((Rectangle){0,1080-120,WIDTH,70}, DARKGREEN);    
+    DrawRectangleRec((Rectangle){0, 0, 150, HEIGHT}, DARKGREEN);
+    DrawRectangleRec((Rectangle){1920 - 150, 0, 150, HEIGHT}, DARKGREEN);
+    DrawRectangleRec((Rectangle){0, 0, WIDTH, 70}, DARKGREEN);
+    DrawRectangleRec((Rectangle){0, 1080 - 120, WIDTH, 70}, DARKGREEN);
 }
 
 void Game()
@@ -269,7 +271,6 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
     }
 }
 
-
 int Detected(int KeyPresed)
 {
     if (KeyPresed == KEY_D)
@@ -311,7 +312,7 @@ void GameOver(int points)
         if (MouseBackToMenu)
         {
             DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width, BackToMenu.height, BLACK);
-            DrawRectangleRec(BackToMenu, purp );
+            DrawRectangleRec(BackToMenu, purp);
         }
         DrawText("Game Over", 575, 75, 150, font);
 
