@@ -20,7 +20,8 @@ Tbody *CreateBody(Vector2 position)
     }
     return body;
 }
-
+ 
+ 
 void AddBody(Snake *snake, Vector2 position)
 {
     Tbody *newNode = CreateBody(position);
