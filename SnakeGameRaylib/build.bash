@@ -1,1 +1,0 @@
-cc game.c -o game.out -o game.exe  -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 && ./game.exe 
