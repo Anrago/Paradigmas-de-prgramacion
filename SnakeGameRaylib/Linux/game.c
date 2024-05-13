@@ -210,10 +210,12 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]) {
             // Verifica el valor de la matriz en la celda
             switch (Matrix[i][j]) {
                 case 0: // Si es 0, dibuja con DARKGREEN
-                    DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKGREEN);
+                    DrawRectangle(cellRect.x, cellRect.y, cellRect.width,
+                                  cellRect.height, DARKGREEN);
                     break;
                 case 2: // Si es 2, dibuja con DARKRED
-                    DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, DARKRED);
+                    DrawRectangle(cellRect.x, cellRect.y, cellRect.width,
+                                  cellRect.height, DARKRED);
                     break;
                 default: // Si no es ninguno de los anteriores, no dibuja nada
                     break;
@@ -221,6 +223,7 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]) {
         }
     }
 }
+
 void DrawBody(int startX, int startY, Tbody *head) {
     bool isFirst = true;
     Color bodyColor = {100, 156, 0, 255}; // Color del cuerpo
@@ -237,10 +240,12 @@ void DrawBody(int startX, int startY, Tbody *head) {
         
         // Dibuja la celda
         if (isFirst) { // Dibuja la primera celda en negro
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, BLACK);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height,
+                          BLACK);
             isFirst = false;
         } else { // Dibuja las demás celdas con el color del cuerpo
-            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height, bodyColor);
+            DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height,
+                          bodyColor);
         }
 
         // Avanza al siguiente nodo del cuerpo
@@ -248,7 +253,8 @@ void DrawBody(int startX, int startY, Tbody *head) {
     }
 }
 
-void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int keyPressed, bool *CloseGame) {
+void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
+               int keyPressed, bool *CloseGame) {
     static int currentDirection = 4; // Dirección actual (4: Derecha, 3: Izquierda, 2: Arriba, 1: Abajo)
     static float timer = 0;
     int tempX = pos->x;
@@ -333,8 +339,9 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS], int
         }
     }
 }
-int Detected(int KeyPresed)
-{
+
+//Detecta tecla persionada para direccionamiento de la serpiente
+int Detected(int KeyPresed){
     if (KeyPresed == KEY_D)
         return 4;
     if (KeyPresed == KEY_A)
@@ -345,6 +352,7 @@ int Detected(int KeyPresed)
         return 1;
 }
 
+//Menu de GameOver
 void GameOver(int points) {
     static int Record = 0; // Record del juego
     Rectangle BackToMenu = {685, 502, 558, 235}; // Área para volver al menú
@@ -379,7 +387,8 @@ void GameOver(int points) {
 
         // Resalta el botón si el ratón está sobre él
         if (MouseBackToMenu) {
-            DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width, BackToMenu.height, BLACK);
+            DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width, 
+                               BackToMenu.height, BLACK);
             DrawRectangleRec(BackToMenu, purp);
         }
 
