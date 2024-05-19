@@ -1,3 +1,7 @@
+#Antonio Ramos Gonzalez
+#372576
+#Archivo principal
+#30/05/2024
 from User import User
 import os
 import platform
@@ -8,12 +12,14 @@ def clear():
     if system == "Windows":
         os.system("cls")
 def pause():
-    input("Oprime cualquier tecla para continuar")
+    input("Oprima cualquier tecla para continuar")
+
+
 
 def menuGeneral(opc):
     clear()
     if opc==1:
-        print("registro banco LOS NACOS")
+        print("registro banco ZAPOTECA")
         name=input("Nombre: ")
         age=input("Edad: ")
         password=input("Contrasenia: ")
@@ -61,12 +67,8 @@ def menuLogin(client):
             pause()
         elif opc2 ==5:
             print("Hasta luego ",client.name)
+            pause()
             return
-
-        
-
-
-
 
 clear()
 print("1.-Registrarse")

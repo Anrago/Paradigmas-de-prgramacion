@@ -1,4 +1,8 @@
-from Account import Account
+#Antonio Ramos Gonzalez
+#372576
+#Clase User
+#30/05/2024
+from  BankClass import BankClass
 from Person import Person
 from random import randint
 
@@ -7,7 +11,7 @@ class User(Person):
         super().__init__('','','')
         self.__password=''
         self.__noClient=0
-        self.account=Account()
+        self.account=BankClass()
 
     def register(self,name,age,password,valPass,gender): 
         self.name=name
@@ -23,7 +27,7 @@ class User(Person):
             else:
                 break
         print("La cuenta ha sido creada con exito")
-        print("Bienvenido al la familia de LOS NACOS.")
+        print("Bienvenido al la familia de BANCO ZAPOTECA.")
         self.account._noCard=randint(1000000000000000,9999999999999999)
         self.account._interBanKey='542965'+str(randint(10000000000,99999999999))+str(randint(0,5))
         self.__noClient=randint(10000,99999)
@@ -31,10 +35,10 @@ class User(Person):
         print("Su No. de tarjeta es: ",self.account._noCard) 
         print("Su clave interbacaria es: ",self.account._interBanKey)
         print("Su saldo inicial sera de : ",self.account._balance," $")
-        print("Con cualquiera de estos dos numero podra realizar transferencias")
         fa=open("Bank/Cuentas.txt","a")
         
-        fa.write(str(self.__noClient) + ' ' + self.name + ' ' + self.__password + ' ' + str(self.account._noCard) + ' ' + str(self.account._interBanKey) + ' ' + str(self.account._balance) + '\n')
+        fa.write(str(self.__noClient) + ' ' + self.name + ' ' + self.__password + ' '
+                 + str(self.account._noCard) + ' ' + str(self.account._interBanKey) + ' ' + str(self.account._balance) + '\n')
         fa.close()
 
     def Login(self,noCard, password):
@@ -46,6 +50,7 @@ class User(Person):
                 self.account._balance=part[5]
                 self.account._interBanKey=part[4]
                 self.account._noCard=part[3]
+                self.name=part[1]
                 fa.close()
                 return True
         fa.close()
