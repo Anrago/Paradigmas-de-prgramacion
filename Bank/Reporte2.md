@@ -42,5 +42,8 @@ El archivo main es donde se controla la aplicacion, desde ahi podremos registrar
 ![alt text](Img/image5.png)
 ![alt text](Img/image6.png)
 
+**Ejecutable**
+Dentro de la carpeta *dist* existe un main.exe para ejecutar la aplicacion sin nececidad de compilar 
+
 #### Conclusion:
 Esta actividad me ayudo a comprender y fortalecer mis conocimientos sobre el paradigma de programacion orientado a objetos, aplicando los distintos principios del mismo como lo son el encapsulamiento, herencia, creacion de clases y objetos, entre otros.
