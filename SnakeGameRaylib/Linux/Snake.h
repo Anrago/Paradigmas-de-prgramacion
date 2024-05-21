@@ -8,23 +8,27 @@ SNAKE CON LISTAS ENLAZADAS Y USO DE RAYLIB
 #include "raylib.h"
 
 //Definicion dato Tbody
-typedef struct _body{
+typedef struct _body
+{
     Vector2 pos;
     struct _body *next;
 } Tbody;
 
 //Definicion de cabeza y puntaje
-typedef struct{
+typedef struct
+{
     Tbody *head;
     int points;
 } Snake;
 
 //Creacion de nuevo cuerpo
-Tbody *CreateBody(Vector2 position){
+Tbody *create_body(Vector2 position)
+{
     // Reservar memoria para el nuevo nodo
     Tbody *body = (Tbody *)malloc(sizeof(Tbody));
     // Verificar si se pudo reservar memoria correctamente
-    if (body != NULL){
+    if (body != NULL)
+    {
         //Asignamos posicion a nuevo nodo
         body->pos = position;
         body->next = NULL;
@@ -33,10 +37,10 @@ Tbody *CreateBody(Vector2 position){
 }
 
 //Aniade nuevo cuerpo a serpiente
-void AddBody(Snake *snake, Vector2 position)
+void add_body(Snake *snake, Vector2 position)
 {
     // Crear un nuevo nodo para el cuerpo
-    Tbody *newNode = CreateBody(position);
+    Tbody *newNode = create_body(position);
 
     // Verificar si se pudo crear el nuevo nodo
     if (newNode == NULL)
@@ -47,7 +51,8 @@ void AddBody(Snake *snake, Vector2 position)
 
     // Buscar el último nodo en la serpiente
     Tbody *currentNode = snake->head;
-    while (currentNode->next != NULL){
+    while (currentNode->next != NULL)
+    {
         currentNode = currentNode->next;
     }
 
@@ -56,21 +61,24 @@ void AddBody(Snake *snake, Vector2 position)
 }
 
 //Libera memoria de cuerpo
-void FreeBody(Tbody *node){
+void free_body(Tbody *node)
+{
     
     //Libera cuerpo
     free(node);
 }
 
 //Creacion de cabeza de la serpiente
-Snake *InitSnake(Vector2 position){
+Snake *init_snake(Vector2 position)
+{
 
     // Reservar memoria para la cabeza
     Snake *snake = (Snake *)malloc(sizeof(Snake));
     //Verifica que se haya reservado la memoria correctamente
-    if (snake != NULL){
+    if (snake != NULL)
+    {
         //Crea la cabeza de la serpiente
-        snake->head = CreateBody(position);
+        snake->head = create_body(position);
         //Inicializa los puntos en 0
         snake->points = 0;
     }
@@ -78,7 +86,8 @@ Snake *InitSnake(Vector2 position){
 }
 
 //Libera memoria de la serpiente
-void FreeSnake(Snake *snake){
+void free_snake(Snake *snake)
+{
     //Guarda direccion de la serpiente en nuevo nodo
     Tbody *current = snake->head;
     //Verifica que el nodo actual no sea el ultimo
@@ -87,7 +96,7 @@ void FreeSnake(Snake *snake){
         //Guerdamos la poscicion actual en next
         Tbody *next = current->next;
         //Liberamos el nodo
-        FreeBody(current);
+        free_body(current);
 
         //Mover al siguiente nodo
         current = next;
