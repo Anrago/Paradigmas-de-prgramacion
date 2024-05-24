@@ -10,7 +10,7 @@
 #### INTRODUCCION:
 Existen una gran catidad de elementos que cunplen una funcion muy importante dentro de los lenguajes de programacion, facilitandonos el desarrollo de nuestros proyectos o programas
 
-Para esta actividad se nos encomendo identificar dichos elementos fundamentales e implementarlos en la realizacion del mitico juego Snake.
+Para esta actividad se nos encomendo identificar dichos elementos fundamentales e implementarlos en la realizacion del mitico juego Snake utilizando listas enlazadas.
 
 #### Desarrollo:
 Para el desarrollo de esta acitividad primeramente se hara uso del editor de codigo Visual Studio Code y la  interfaz grafica raylib para C/C++. El programa cuenta con el uso de listas enlazadas para el crecimiento de la serpiente y estara codificado siguienlo las reglas de estandar en C de Michael Barr.
@@ -20,7 +20,7 @@ En caso de querer descargar el juego al final del documento se presenta el link 
 **1.-** Primemente en un archivo .h se definiran dos structs para la creacion de la serpiente. El primero llamado Tbody guardara la posicion del nodo actual y tendra un apuntador al siguinete nodo, mientras que el Snake tendermos un tipo de dato head que sera la cabeza y un contador de la puntuacion
 ![alt text](Img/image.png)
 
-**2.-** Ahora se definieron las funciones principalesd de nuestra lista o serpiente, siendo CreateBody la funcion para la creacion de un nuebo elemnto del cuerpo guardando su posicion actual, AddBody añadiendo el nuevo cuerpo al cuerpo principal, FreeBody liberando elemntos individuales del cuerpo, InitSnake la cual inicializa a la serpiente con una posicion inicial y el contador en 0 y por ultimo FreeSnake que se encarga de recorrer el cuerpo entero de nuestra serpiente para ir liberando cada elemento del mismo
+**2.-** Ahora se definieron las funciones principales de nuestra lista o serpiente, siendo create_body la funcion para la creacion de un nuebo elemnto del cuerpo guardando su posicion actual, add_body añadiendo el nuevo cuerpo al cuerpo principal, free_body liberando elemntos individuales del cuerpo, init_snake la cual inicializa a la serpiente con una posicion inicial y el contador en 0 y por ultimo free_snake que se encarga de recorrer el cuerpo entero de nuestra serpiente para ir liberando cada elemento del mismo
 ![alt text](Img/image2.png)
 ![alt text](Img/image3.png)
 ![alt text](Img/image4.png)
@@ -34,23 +34,25 @@ En caso de querer descargar el juego al final del documento se presenta el link 
 **5.-** La funcion main sera la encargada de lo basico de nuestro juego , como inicializacion de la ventana del programa, presentacion del menu de juego y creditos
 ![alt text](Img/image7.png)
 
-**6.-** La funcion BackRec dibuja los bordes del menu
+**6.-** La funcion back_rec dibuja los bordes del menu
 ![alt text](Img/image8.png)
 
 **7.-** La funcion game es la funcion principal donde se ejecuta el juego. Dentro de ella se inicializa la serpiente, se generan las manzanas que se comera la serpiente para crecer, se dibuja la matriz, se detectan colisiones y se llaman a las demas funciones que se usan para la correcta ejecucion del codigo
 ![alt text](Img/image9.png)
 ![alt text](Img/image10.png)
 
-**8.-** La funcion DrawMatrix se encarga de dibujar la matriz de juego y las manzanas
+**8.-** La funcion draw_matrix se encarga de dibujar la matriz de juego y las manzanas
 ![alt text](Img/image11.png)
 
-**9.-** La funcion DrawBody pinta los elementos de la serpiente
+**9.-** La funcion draw_body pinta los elementos de la serpiente
 ![alt text](Img/image12.png)
 
-**10.-**La funcion Dectected devuelve un valor dependiendo de la tecla persionada, esto con el fin de direccionar correctamente a la serpiente
+**11.-** La funcion move_snake se encarga del movimiento de la serpiente, asi como el verificar que esta no colisione con ella misma o con alguno de los muros
+
+**12.-**La funcion dectected devuelve un valor dependiendo de la tecla persionada, esto con el fin de direccionar correctamente a la serpiente
 ![alt text](Img/image13.png)
 
-**11.-** La funcion GameOver nos muestra un menu para regresar al menu principal, asi como nuestra puntuacion actual vs nuestro record 
+**13.-** La funcion game_over nos muestra un menu para regresar al menu principal, asi como nuestra puntuacion actual vs nuestro record 
 ![alt text](Img/image14.png)
 
 

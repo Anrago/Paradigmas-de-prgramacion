@@ -15,16 +15,17 @@ SNAKE CON LISTAS ENLAZADAS Y USO DE RAYLIB
 #define HEIGHT 1040//Largo pantalla
 
 
-void DrawBody(int startX, int startY, Tbody *head); //Dibujar cuerpo  de serpiente
-void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);//Dibujar matriz de juego
-void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
+void draw_body(int startX, int startY, Tbody *head); //Dibujar cuerpo  de serpiente
+void draw_matrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]);//Dibujar matriz de juego
+void move_snake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
                int keyPressed, bool *CloseGame); //Mover a serpiente
-void BackRec();//Pintar fondo de menu
-void GameOver(int points);//Pantalla de fin del juego
-void Game();//Funcion principal de inicio de juego
-int Detected(int KeyPresed);//Detecta la tecla presionada
+void back_rec();//Pintar fondo de menu
+void game_over(int points);//Pantalla de fin del juego
+void game();//Funcion principal de inicio de juego
+int detected(int KeyPresed);//Detecta la tecla presionada
 
-int main(void) {
+int main(void)
+{
     // Declaración de variables
     Vector2 Mouse;
     Rectangle Start = {685, 454, 558, 155};
@@ -40,11 +41,12 @@ int main(void) {
     InitWindow(WIDTH, HEIGHT, "Snake");
 
     // Bucle principal del juego
-    while (!CloseGame && !WindowShouldClose()) {
+    while (!CloseGame && !WindowShouldClose())
+    {
         BeginDrawing();
         ClearBackground(LIME); // Limpiar el fondo
         Mouse = GetMousePosition(); // Obtener la posición del ratón
-        BackRec(); // Dibujar el fondo
+        back_rec(); // Dibujar el fondo
 
         // Dibujar el título y los botones "Start" y "Close"
         DrawText("SNAKE", (WIDTH / 2) - 325, 150, 200, font);
@@ -56,13 +58,15 @@ int main(void) {
         MouseCloseGame = CheckCollisionPointRec(Mouse, Close);
 
         // Resaltar el botón "Start" si el ratón está sobre él
-        if (MouseStartGame) {
+        if (MouseStartGame)
+        {
             DrawRectangleLines(Start.x, Start.y, Start.width, Start.height, BLACK);
             DrawRectangleRec(Start, DARKBLUE);
         }
 
         // Resaltar el botón "Close" si el ratón está sobre él
-        if (MouseCloseGame) {
+        if (MouseCloseGame)
+        {
             DrawRectangleLines(Close.x, Close.y, Close.width, Close.height, BLACK);
             DrawRectangleRec(Close, DARKRED);
         }
@@ -72,15 +76,16 @@ int main(void) {
         DrawText("Close", Close.x + 125, Close.y + 30, 100, font);
 
         // Verificar si se hace clic en los botones
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
             if (MouseStartGame)
-                Game(); // Iniciar el juego si se hace clic en "Start"
+                game(); // Iniciar el juego si se hace clic en "Start"
             if (MouseCloseGame)
                 CloseGame = true; // Cerrar el juego si se hace clic en "Close"
         }
 
         // Dibujar información adicional
-        DrawText("Create by: Antonio Ramos Gonzalez", 1410, 1000, 20, GREEN);
+        DrawText("Create by: Antonio Ramos Gonzalez", 1410, 960, 20, GREEN);
 
         EndDrawing();
     }
@@ -91,11 +96,12 @@ int main(void) {
 }
 
 //------------------------Funciones------------------------------
-void BackRec() {
+void back_rec()
+{
     Rectangle leftBorder = {0, 0, 150, HEIGHT}; // Borde izquierdo
     Rectangle rightBorder = {WIDTH - 150, 0, 150, HEIGHT}; // Borde derecho
     Rectangle topBorder = {0, 0, WIDTH, 70}; // Borde superior
-    Rectangle bottomBorder = {0, HEIGHT - 70, WIDTH, 70}; // Borde inferior
+    Rectangle bottomBorder = {0, HEIGHT - 120, WIDTH, 70}; // Borde inferior
 
     // Dibuja los bordes
     DrawRectangleRec(leftBorder, DARKGREEN);
@@ -104,10 +110,11 @@ void BackRec() {
     DrawRectangleRec(bottomBorder, DARKGREEN);
 }
 
-void Game(){
+void game()
+{
     //Declaracion de variables
     Vector2 Apple = {25, 9};
-    Snake *snake = InitSnake((Vector2){11, 9});
+    Snake *snake = init_snake((Vector2){11, 9});
     int startX = 40;
     int startY = 80;
     int Matrix[MAX_ROWS][MAX_COLUMNS];
@@ -127,33 +134,37 @@ void Game(){
     Matrix[(int)Apple.y][(int)Apple.x] = 2;
     Matrix[(int)snake->head->pos.y][(int)snake->head->pos.x] = 1;
     //Inicia ciclo de juego
-    while (!CloseGame && !WindowShouldClose()){
+    while (!CloseGame && !WindowShouldClose())
+    {
         //Dibujamos la matriz, el titulo y los puntos
         BeginDrawing();
         DrawText("SNAKE", (WIDTH / 2) - 100, 30, 50, BLUE);
         DrawText(TextFormat("Points: %i", snake->points), 100, 40, 30, BLUE);
-        DrawMatrix(startX, startY, Matrix);
+        draw_matrix(startX, startY, Matrix);
 
         //Checamos colision de la cabeza de la serpiente con la manzana
         if (CheckCollisionRecs((Rectangle){snake->head->pos.x * (CELL_SIZE+
             PADDING) + startX, snake->head->pos.y * (CELL_SIZE + PADDING) +
             startY, CELL_SIZE, CELL_SIZE}, (Rectangle){Apple.x * (CELL_SIZE
             + PADDING) + startX, Apple.y * (CELL_SIZE + PADDING) + startY, 
-            CELL_SIZE, CELL_SIZE})){
+            CELL_SIZE, CELL_SIZE}))
+        {
             
             //Verificamos la posicion de la serpiente
             Tbody *Nodo=snake->head;
             //Eliminamos a la manzana de la matriz
             Matrix[(int)Apple.y][(int)Apple.x] = 0;
-            while(Nodo!=NULL){
+            while(Nodo!=NULL)
+            {
                 //Le damos valor 1 para que las manzanas no se generen en su posicion
                 Matrix[(int)Nodo->pos.y][(int)Nodo->pos.x]=1;
                 Nodo=Nodo->next;
             }
-            FreeBody(Nodo);
+            free_body(Nodo);
 
             //Generamos una nueva manzana en una posicion random
-            do{
+            do
+            {
                 Apple.x = GetRandomValue(1, MAX_COLUMNS - 1);
                 Apple.y = GetRandomValue(1, MAX_ROWS - 1);
             } while (Matrix[(int)Apple.y][(int)Apple.x] != 0);
@@ -162,7 +173,7 @@ void Game(){
             Matrix[(int)Apple.y][(int)Apple.x] = 2;
             
             //Aniadimos un nuevo cuerpo a la serpiente y sumamos puntos
-            AddBody(snake, (Vector2){snake->head->pos.x, snake->head->pos.y});
+            add_body(snake, (Vector2){snake->head->pos.x, snake->head->pos.y});
             snake->points++;
         }
         
@@ -172,34 +183,38 @@ void Game(){
             CloseGame = true;
 
         //Dibujamos cuerpo
-        DrawBody(startX, startY, snake->head);
+        draw_body(startX, startY, snake->head);
 
         //Obtener tecla y mover a la serpiente
         int keyPresed = GetKeyPressed();
-        if (keyPresed != 0){
-            detctKeyboar = Detected(keyPresed);
-            MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar,
+        if (keyPresed != 0)
+        {
+            detctKeyboar = detected(keyPresed);
+            move_snake(&snake->head->pos, snake->head, Matrix, detctKeyboar,
                      &CloseGame);
         }
-        MoveSnake(&snake->head->pos, snake->head, Matrix, detctKeyboar, 
+        move_snake(&snake->head->pos, snake->head, Matrix, detctKeyboar, 
                   &CloseGame);
         //Limpiamos el fondo
         ClearBackground(BLACK);
         EndDrawing();
     }
     //Movemos a la pantalla de game over y liberamos memoria
-    GameOver(snake->points);
-    FreeSnake(snake);
+    game_over(snake->points);
+    free_snake(snake);
 }
 
 
-void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]) {
+void draw_matrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS])
+{
     Color DARKRED = {192, 0, 0, 255};
     
     // Ciclo para recorrer filas
-    for (int i = 0; i < MAX_ROWS; i++) {
+    for (int i = 0; i < MAX_ROWS; i++)
+    {
         // Ciclo para recorrer columnas
-        for (int j = 0; j < MAX_COLUMNS; j++) {
+        for (int j = 0; j < MAX_COLUMNS; j++)
+        {
             // Calcula las coordenadas de la celda
             int cellX = posx + j * (CELL_SIZE + PADDING);
             int cellY = posy + i * (CELL_SIZE + PADDING);
@@ -208,7 +223,8 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]) {
             Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
             
             // Verifica el valor de la matriz en la celda
-            switch (Matrix[i][j]) {
+            switch (Matrix[i][j])
+            {
                 case 0: // Si es 0, dibuja con DARKGREEN
                     DrawRectangle(cellRect.x, cellRect.y, cellRect.width,
                                   cellRect.height, DARKGREEN);
@@ -223,13 +239,16 @@ void DrawMatrix(int posx, int posy, int Matrix[MAX_ROWS][MAX_COLUMNS]) {
         }
     }
 }
-void DrawBody(int startX, int startY, Tbody *head) {
+
+void draw_body(int startX, int startY, Tbody *head)
+{
     bool isFirst = true;
     Color bodyColor = {100, 156, 0, 255}; // Color del cuerpo
     Tbody *currentNode = head;
     
     // Ciclo para recorrer los nodos del cuerpo
-    while (currentNode != NULL) {
+    while (currentNode != NULL)
+    {
         // Calcula las coordenadas de la celda
         int cellX = startX + currentNode->pos.x * (CELL_SIZE + PADDING);
         int cellY = startY + currentNode->pos.y * (CELL_SIZE + PADDING);
@@ -238,11 +257,14 @@ void DrawBody(int startX, int startY, Tbody *head) {
         Rectangle cellRect = {cellX, cellY, CELL_SIZE, CELL_SIZE};
         
         // Dibuja la celda
-        if (isFirst) { // Dibuja la primera celda en negro
+        if (isFirst)
+        { // Dibuja la primera celda en negro
             DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height,
                           BLACK);
             isFirst = false;
-        } else { // Dibuja las demás celdas con el color del cuerpo
+        }
+        else
+        { // Dibuja las demás celdas con el color del cuerpo
             DrawRectangle(cellRect.x, cellRect.y, cellRect.width, cellRect.height,
                           bodyColor);
         }
@@ -252,8 +274,9 @@ void DrawBody(int startX, int startY, Tbody *head) {
     }
 }
 
-void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
-               int keyPressed, bool *CloseGame) {
+void move_snake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
+               int keyPressed, bool *CloseGame)
+{
     static int currentDirection = 4; // Dirección actual (4: Derecha, 3: Izquierda, 2: Arriba, 1: Abajo)
     static float timer = 0;
     int tempX = pos->x;
@@ -300,8 +323,10 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
 
     // Comprueba colisión con la serpiente misma
     Tbody *CollisionNode = head->next;
-    while (CollisionNode != NULL) {
-        if (nextX == CollisionNode->pos.x && nextY == CollisionNode->pos.y) {
+    while (CollisionNode != NULL)
+    {
+        if (nextX == CollisionNode->pos.x && nextY == CollisionNode->pos.y)
+        {
             *CloseGame = true;
             return;
         }
@@ -309,7 +334,8 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
     }
 
     // Mueve la cabeza de la serpiente
-    if (nextX >= -1 && nextX < MAX_COLUMNS+1 && nextY >= -1 && nextY < MAX_ROWS+1) {
+    if (nextX >= -1 && nextX < MAX_COLUMNS+1 && nextY >= -1 && nextY < MAX_ROWS+1)
+    {
         Matrix[nextY][nextX] = 1;
         pos->x = nextX;
         pos->y = nextY;
@@ -317,7 +343,8 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
 
     // Mueve el cuerpo de la serpiente
     Tbody *currentNode = head->next;
-    while (currentNode != NULL) {
+    while (currentNode != NULL)
+    {
         int tempNextX = currentNode->pos.x;
         int tempNextY = currentNode->pos.y;
         currentNode->pos.x = tempX;
@@ -331,14 +358,18 @@ void MoveSnake(Vector2 *pos, Tbody *head, int Matrix[MAX_ROWS][MAX_COLUMNS],
     timer = 0;
 
     // Borra el rastro de la serpiente en la matriz
-    for (int i = 0; i < MAX_ROWS; i++) {
-        for (int j = 0; j < MAX_COLUMNS; j++) {
+    for (int i = 0; i < MAX_ROWS; i++)
+    {
+        for (int j = 0; j < MAX_COLUMNS; j++)
+        {
             if (Matrix[i][j] != 2)
                 Matrix[i][j] = 0;
         }
     }
 }
-int Detected(int KeyPresed)
+
+//Detecta tecla persionada para direccionamiento de la serpiente
+int detected(int KeyPresed)
 {
     if (KeyPresed == KEY_D)
         return 4;
@@ -350,7 +381,9 @@ int Detected(int KeyPresed)
         return 1;
 }
 
-void GameOver(int points) {
+//Menu de game_over
+void game_over(int points)
+{
     static int Record = 0; // Record del juego
     Rectangle BackToMenu = {685, 502, 558, 235}; // Área para volver al menú
     Vector2 MousePosition; // Posición del ratón
@@ -364,12 +397,13 @@ void GameOver(int points) {
         Record = points;
 
     // Mientras no se cierre la ventana y no se cierre el juego
-    while (!WindowShouldClose() && !CloseGame) {
+    while (!WindowShouldClose() && !CloseGame)
+    {
         BeginDrawing();
         ClearBackground(LIME); // Limpia el fondo
 
         // Dibuja el fondo
-        BackRec();
+        back_rec();
 
         // Dibuja los puntos y el record
         DrawText(TextFormat("Points: %i", points), 750, 250, 100, font);
@@ -383,8 +417,9 @@ void GameOver(int points) {
         MouseBackToMenu = CheckCollisionPointRec(MousePosition, BackToMenu);
 
         // Resalta el botón si el ratón está sobre él
-        if (MouseBackToMenu) {
-            DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width,
+        if (MouseBackToMenu)
+        {
+            DrawRectangleLines(BackToMenu.x, BackToMenu.y, BackToMenu.width, 
                                BackToMenu.height, BLACK);
             DrawRectangleRec(BackToMenu, purp);
         }
@@ -395,7 +430,8 @@ void GameOver(int points) {
         DrawText("Menu", BackToMenu.x + 150, BackToMenu.y + 130, 100, font);
 
         // Verifica si se hace clic en el botón "Back to Menu"
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
             if (MouseBackToMenu)
                 CloseGame = true; // Cierra el juego si se hace clic en el botón "Back to Menu"
         }
