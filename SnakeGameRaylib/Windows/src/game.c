@@ -12,7 +12,7 @@ SNAKE CON LISTAS ENLAZADAS Y USO DE RAYLIB
 #define PADDING 5 //Separacion entre celdas
 #define MOVE_SPEED 0.5f //Velocidad de la serpiente
 #define WIDTH 1920 //Ancho pantalla
-#define HEIGHT 1040//Largo pantalla
+#define HEIGHT 1000//Largo pantalla
 
 
 void draw_body(int startX, int startY, Tbody *head); //Dibujar cuerpo  de serpiente

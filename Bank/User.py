@@ -22,7 +22,7 @@ class User(Person):
         self.gender=gender
         self.__password=password
         while(True):
-            if self.password!=valPass:
+            if self.__password!=valPass:
                 print("Las contraseñas no coincide. Favor de intentarlo nuevamente")
             else:
                 break

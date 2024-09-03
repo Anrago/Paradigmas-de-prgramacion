@@ -30,7 +30,7 @@ def menuGeneral(opc):
     elif opc==2:
         while(True):
             print("Login")
-            noCard=input("Ingrese numero de tarjeta: ")
+            noCard=input("Ingrese numero de tarjeta: ") 
             password=input("Ingrese contrasenia: ")
             client=User()
             val=client.Login(noCard,password)
